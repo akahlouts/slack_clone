@@ -18,7 +18,9 @@ export const UserButton = () => {
   const { data, isLoading } = useCurrentUser();
 
   if (isLoading) {
-    return <Loader className="size-4 animate-spin text-muted-foreground" />;
+    return (
+      <Loader className="size-4 animate-spin text-muted-foreground mb-3" />
+    );
   }
 
   if (!data) {
