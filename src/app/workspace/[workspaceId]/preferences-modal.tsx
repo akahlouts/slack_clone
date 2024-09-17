@@ -1,16 +1,24 @@
 import { useState } from "react";
 
+import { useWorkspaceId } from "@/hooks/use-workspace-id";
+
 import { useUpdateWorkspace } from "@/features/workspaces/api/use-update-workspace";
 import { useRemoveWorkspace } from "@/features/workspaces/api/use-remove-workspace";
 
+import { toast } from "sonner";
 import { TrashIcon } from "lucide-react";
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface PreferencesModalProps {
   open: boolean;
@@ -23,12 +31,35 @@ export const PreferencesModal = ({
   setOpen,
   initialValue,
 }: PreferencesModalProps) => {
+  const workspaceId = useWorkspaceId();
+
   const [value, setValue] = useState(initialValue);
+  const [editOpen, setEditOpen] = useState(false);
 
   const { mutate: updateWorkspace, isPending: isUpdatingWorkspace } =
     useUpdateWorkspace();
   const { mutate: removeWorkspace, isPending: isRemovingWorkspace } =
     useRemoveWorkspace();
+
+  const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    updateWorkspace(
+      {
+        id: workspaceId,
+        name: value,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Workspace updated");
+          setEditOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to update workspace");
+        },
+      }
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -40,15 +71,44 @@ export const PreferencesModal = ({
           <DialogTitle>{value}</DialogTitle>
         </DialogHeader>
         <div className="px-4 pb-4 flex flex-col gap-y-2">
-          <div className="px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold">Workspace name</p>
-              <p className="text-sm text-[#1264a3] hover:underline font-semibold">
-                Edit
-              </p>
-            </div>
-            <p className="text-sm">{value}</p>
-          </div>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <DialogTrigger asChild>
+              <div className="px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold">Workspace name</p>
+                  <p className="text-sm text-[#1264a3] hover:underline font-semibold">
+                    Edit
+                  </p>
+                </div>
+                <p className="text-sm">{value}</p>
+              </div>
+            </DialogTrigger>
+            <DialogContent aria-describedby={undefined}>
+              <DialogHeader>
+                <DialogTitle>Rename this workspace</DialogTitle>
+                <form className="space-y-4" onSubmit={handleEdit}>
+                  <Input
+                    value={value}
+                    disabled={isUpdatingWorkspace}
+                    onChange={(e) => setValue(e.target.value)}
+                    required
+                    autoFocus
+                    minLength={3}
+                    maxLength={80}
+                    placeholder="Workspace name e.g. 'Work', 'Personal', 'Home'"
+                  />
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button variant="outline" disabled={isUpdatingWorkspace}>
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button disabled={isUpdatingWorkspace}>Save</Button>
+                  </DialogFooter>
+                </form>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
 
           <button
             disabled={false}
