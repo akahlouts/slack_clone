@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { useWorkspaceId } from "@/hooks/use-workspace-id";
 
@@ -31,6 +32,7 @@ export const PreferencesModal = ({
   setOpen,
   initialValue,
 }: PreferencesModalProps) => {
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
 
   const [value, setValue] = useState(initialValue);
@@ -40,6 +42,23 @@ export const PreferencesModal = ({
     useUpdateWorkspace();
   const { mutate: removeWorkspace, isPending: isRemovingWorkspace } =
     useRemoveWorkspace();
+
+  const handleRemove = () => {
+    removeWorkspace(
+      {
+        id: workspaceId,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Workspace removed");
+          router.replace("/");
+        },
+        onError: () => {
+          toast.error("Failed to remove workspace");
+        },
+      }
+    );
+  };
 
   const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,8 +130,8 @@ export const PreferencesModal = ({
           </Dialog>
 
           <button
-            disabled={false}
-            onClick={() => {}}
+            disabled={isRemovingWorkspace}
+            onClick={handleRemove}
             className="flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
           >
             <TrashIcon className="size-4" />
