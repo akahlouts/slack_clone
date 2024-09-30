@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Hint } from "./hint";
 import { Thumbnail } from "./thumbnail";
 import { Toolbar } from "./toolbar";
+import { Reactions } from "./reactions";
 
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 
@@ -169,7 +170,7 @@ export const Message = ({
                     (edited)
                   </span>
                 ) : null}
-                {JSON.stringify(reactions)}
+                <Reactions data={reactions} onChange={handleReaction} />
               </div>
             )}
           </div>
@@ -240,7 +241,7 @@ export const Message = ({
               {updatedAt ? (
                 <span className="text-xs text-muted-foreground">(edited)</span>
               ) : null}
-              {JSON.stringify(reactions)}
+              <Reactions data={reactions} onChange={handleReaction} />
             </div>
           )}
         </div>
