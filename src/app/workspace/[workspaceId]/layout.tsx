@@ -17,6 +17,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { WorkspaceSidebar } from "./workspace-sidebar";
+import { Thread } from "@/features/messages/components/thread";
 
 interface WorkspaceIdLayoutProps {
   children: React.ReactNode;
