@@ -27,7 +27,8 @@ export const getById = query({
       .query("members")
       .withIndex("by_workspace_id_user_id", (q) =>
         q.eq("workspaceId", member.workspaceId).eq("userId", userId)
-      );
+      )
+      .unique();
 
     if (!currentMember) {
       return null;
@@ -41,7 +42,7 @@ export const getById = query({
 
     return {
       ...member,
-      userId,
+      user,
     };
   },
 });
