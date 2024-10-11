@@ -11,7 +11,6 @@ import { useGetMembers } from "@/features/members/api/use-get-members";
 
 import { Button } from "@/components/ui/button";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -19,7 +18,6 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
 export const Toolbar = () => {
