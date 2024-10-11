@@ -8,13 +8,13 @@ This Slack clone is a real-time messaging platform built with **Next.js 14**, **
 - **TypeScript**
 - **Tailwind CSS**
 - **ShadCN UI**
-- **Clerk**
 - **Convex**
+- **Convex Auth**
 - **React Hook Form**
 
 ## 🔋 Features
 
-👉 **Authentication (CRUD) with Clerk**: Users can sign up, log in, and manage their profiles securely with Clerk integration.
+👉 **Authentication (CRUD) with Convex**: Secure user authentication and management, allowing users to sign up, log in, and manage their profiles.
 
 👉 **Workspaces (CRUD)**: Create, join, update, and manage different workspaces for team communication.
    
